@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compartir Ubicación</title>
+    <script>
+        function obtenerUbicacion() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(enviarUbicacion, mostrarError);
+            } else {
+                alert("La geolocalización no es compatible con este navegador.");
+            }
+        }
+
+        function enviarUbicacion(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            
+            var url = "https://script.google.com/macros/s/AKfycbxBfLlHjUo9L-mQRbHU3HYlaw0L8b_M7IMjX4gtLaH4Sa3YuaUtg7jn5DBT1I8_qNmovg/exec";
+            url += "?lat=" + lat + "&lng=" + lng;
+            
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    alert("Ubicación enviada correctamente.");
+                })
+                .catch(error => {
+                    alert("Error al enviar la ubicación: " + error);
+                });
+        }
+
+        function mostrarError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("El usuario denegó la solicitud de geolocalización.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("La información de ubicación no está disponible.");
+                    break;
+                case error.TIMEOUT:
+                    alert("La solicitud para obtener la ubicación ha caducado.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("Ocurrió un error desconocido.");
+                    break;
+            }
+        }
+    </script>
+</head>
+<body onload="obtenerUbicacion()">
+    <h2>Compartir Ubicación</h2>
+    <p>Por favor, permite el acceso a tu ubicación para continuar.</p>
+</body>
+</html>
